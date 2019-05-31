@@ -1,13 +1,17 @@
  const express = require("express");
  const router = express.Router();
- const {check, validationResult} = require("express-validator/check")
 const gravatar = require("gravatar");
-const bycrypt = require("bcryptjs")
+const bycrypt = require("bcryptjs");
+
+const jwt = require("jsonwebtoken");
+const config = require("config");
+const {check, validationResult} = require("express-validator/check");
+
 
 const User = require("../../../models/User")
 
  //@route  GET api/users
- //@desc   Test route
+ //@desc   Register User
  //@access Public
 
  router.post("/", 
@@ -45,6 +49,7 @@ const User = require("../../../models/User")
         default: "mm"
     })
 
+    //Creating new user document
     user = new User({
         name,
         email,
@@ -59,8 +64,22 @@ const User = require("../../../models/User")
     await user.save();
 
     //return jsonwebtoken 
+    //pay load is data being sent via token
+    const payload = {
+        user:{
+            id: user.id,
+        }
+    }
 
-     res.send("user registered")
+    jwt.sign(payload, 
+        config.get("jwtSecret"),
+        {expiresIn: 360000},
+        (err, token) =>{
+            if(err) throw err;
+            res.json({ token })
+        }
+        );
+
 
 
 
