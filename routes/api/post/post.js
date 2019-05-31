@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-//@route  GET api/post
-//@desc   Test route
+//@route  POST api/post
+//@desc   Register user
 //@access Public
 
 router.get("/", (req, res)=>{
