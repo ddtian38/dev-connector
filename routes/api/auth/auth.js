@@ -55,6 +55,7 @@ router.get("/", auth, async(req, res)=>{
         return res.status(400)
         .json( {errors: [{ message: "Invalid credentials" }] })
     }
+
     //return jsonwebtoken 
     //pay load is data being sent via token
     const payload = {
@@ -71,9 +72,6 @@ router.get("/", auth, async(req, res)=>{
             res.json({ token })
         }
         );
-
-
-
 
     }catch(err){
 
