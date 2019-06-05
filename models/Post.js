@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const postSchema = new Schema({
     user:{
         type: Schema.Types.ObjectId,
-        ref: "users"
+        ref: "user"
     },
     text:{
         type:String,
@@ -21,7 +21,7 @@ const postSchema = new Schema({
         {
             user: {
                 type:Schema.Types.ObjectId,
-                ref:"users"
+                ref:"user"
             }
         }
     ],
@@ -29,7 +29,7 @@ const postSchema = new Schema({
         {
             user: {
                 type: Schema.Types.ObjectId,
-                ref: "users"
+                ref: "user"
             },
             text:{
                 type: String,
@@ -49,4 +49,4 @@ const postSchema = new Schema({
     ]
 });
 
-module.exports = Post = new Schema("post", postSchema);
+module.exports = Post = mongoose.model("post", postSchema);

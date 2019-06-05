@@ -5,8 +5,7 @@ const config = require("config");
 const auth = require("../../../middleware/auth")
 const {check, validationResult} = require("express-validator/check")
 
-const Profile = require("../../../models/Profile")
-const User = require("../../../models/User")
+const {User, Profile} = require("../../../models/index")
 
 
 //@route  GET api/profile
