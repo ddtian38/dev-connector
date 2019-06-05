@@ -1,4 +1,6 @@
 {
     "mongoURI" : "mongodb+srv://ddtian38:planowest2@cluster0-ps8pg.mongodb.net/test?retryWrites=true&w=majority",
-    "jwtSecret": "execute-order-66"
+    "jwtSecret": "execute-order-66",
+    "githubClientId":"7632d2612f93cd58e7ae",
+    "githubSecret": "9135902f43edd5e57e68feeddad6a731f2336cb7"
 }
