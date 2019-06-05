@@ -151,6 +151,11 @@ router.put("/unlike/:post_id", auth, async (req, res) => {
         const post = await Post.findById(req.params.post_id);
 
         if(!post) return res.status(400).json({msg : "Post not found."});
+        console.log(post.likes)
+
+        if(post.likes.map(like => like.user).length === 0){
+            return res.status(400).json({ msg: "Post has not been liked."})
+        }
 
         const user = post.likes.filter(like => like.user.toString() === req.user.id);
         // console.log(user);
@@ -159,7 +164,7 @@ router.put("/unlike/:post_id", auth, async (req, res) => {
         post.likes.splice(removedId, 1);
         // console.log(post);
         await post.save();
-        res.json(post);
+        res.json(post.likes);
         
     } catch (err) {
         console.error(err.message);
@@ -176,10 +181,11 @@ router.put("/unlike/:post_id", auth, async (req, res) => {
 
     router.delete("/:post_id/comment/:comment_id", auth, async (req, res) => {
         try {
-            console.log(req.user)
             const post = await Post.findById(req.params.post_id);
 
             if(!post) return res.status(400).json({msg : "Post not found."});
+
+            if(post.comments === 0) return res.status(400).json({msg : "There are not comments in the post."});
     
             const comment = post.comments.filter(comment => comment._id.toString() === req.params.comment_id);     
             
@@ -187,12 +193,13 @@ router.put("/unlike/:post_id", auth, async (req, res) => {
 
             if(comment[0].user.toString() !== req.user.id) return res.status(401).json({ msg: "User is not authorized"})
             
-            const removedId = post.comments.indexOf(comment);
-    
+            const removedId = post.comments.indexOf(comment[0]);
+            // console.log(post.comments)
+            // console.log(comment)
+            // console.log(removedId);
             post.comments.splice(removedId, 1);
-            // console.log(post);
             await post.save();
-            res.json(post);
+            res.json(post.comments);
 
         } catch (err) {
             console.error(err.message);
@@ -222,7 +229,8 @@ router.put("/unlike/:post_id", auth, async (req, res) => {
 
         try {
             
-            const post = await Post.findById(req.params.post_id).populate("user", ["name", "avatar"]);
+            const user = await User.findById(req.user.id).select("-password");
+            const post = await Post.findById(req.params.post_id)
             
             if(!post) return res.status(400).json({msg : "Post not found."});
             console.log(post)
@@ -230,13 +238,13 @@ router.put("/unlike/:post_id", auth, async (req, res) => {
             const newComment = {
             user: req.user.id,
             text: req.body.text,
-            name: post.user.name,
-            avatar: post.user.avatar
+            name: user.name,
+            avatar: user.avatar
             }
 
             post.comments.unshift(newComment);
             await post.save();
-            res.json(post);
+            res.json(post.comments);
 
         } catch (err) {
             console.error(err.message);
